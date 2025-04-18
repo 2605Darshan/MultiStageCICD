@@ -14,7 +14,7 @@ RUN npm install
 COPY scrape.js .
 
 # Run the scraper
-ENV SCRAPE_URL=https://example.com
+ENV SCRAPE_URL=https://quotes.toscrape.com/
 RUN node scrape.js
 
 # Stage 2: Server

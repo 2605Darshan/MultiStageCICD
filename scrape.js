@@ -6,12 +6,16 @@ const url = process.env.SCRAPE_URL;
 (async () => {
   const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox'] });
   const page = await browser.newPage();
-  await page.goto(url);
+  await page.goto(url, { waitUntil: 'networkidle2' }); // Wait for page to load
 
-  const data = await page.evaluate(() => ({
-    title: document.title,
-    heading: document.querySelector('h1')?.innerText || 'No heading found',
-  }));
+  const data = await page.evaluate(() => {
+    const quotesList = Array.from(document.querySelectorAll('.quote')).map(quote => ({
+      text: quote.querySelector('.text')?.innerText || '',
+      author: quote.querySelector('.author')?.innerText || '',
+      tags: Array.from(quote.querySelectorAll('.tag')).map(tag => tag.innerText) || [],
+    }));
+    return quotesList;
+  });
 
   fs.writeFileSync('scraped_data.json', JSON.stringify(data, null, 2));
 
