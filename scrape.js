@@ -6,7 +6,7 @@ const url = process.env.SCRAPE_URL;
 (async () => {
   const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox'] });
   const page = await browser.newPage();
-  await page.goto(url, { waitUntil: 'networkidle2' }); // Wait for page to load
+  await page.goto(url, { waitUntil: 'networkidle2' }); 
 
   const data = await page.evaluate(() => {
     const quotesList = Array.from(document.querySelectorAll('.quote')).map(quote => ({
